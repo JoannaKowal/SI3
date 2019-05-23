@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SI3", "SI3\SI3.csproj", "{6558E15C-56E2-46B3-86D3-E4305FEB86BA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SI3Backend", "SI3Backend\SI3Backend.shproj", "{7669DE23-27D9-4CAD-B8C1-A190DA8F3708}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SI3Backend\SI3Backend.projitems*{6558e15c-56e2-46b3-86d3-e4305feb86ba}*SharedItemsImports = 4
+		SI3Backend\SI3Backend.projitems*{7669de23-27d9-4cad-b8c1-a190da8f3708}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6558E15C-56E2-46B3-86D3-E4305FEB86BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6558E15C-56E2-46B3-86D3-E4305FEB86BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6558E15C-56E2-46B3-86D3-E4305FEB86BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6558E15C-56E2-46B3-86D3-E4305FEB86BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {08D92305-8130-4EA8-AF42-76571792CE11}
+	EndGlobalSection
+EndGlobal
