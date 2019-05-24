@@ -25,7 +25,7 @@ namespace SI3Backend
         Board m_boardState = new Board();
 		//  GameField gameField = new GameField();
 
-
+		// TODO parametry!
 		public void Start()
 		{
 			m_currentState = GameState.InProgress;
@@ -42,18 +42,37 @@ namespace SI3Backend
         {
             if (m_currentState != GameState.InProgress)
                 return;
-            //...
-        }
+
+
+			m_activePlayer = GetOpposingPlayer(m_activePlayer);
+
+		}
 
         public void PlacePawn(BoardFieldId id)
         {
             if ( m_activePlayer != PlayerId.None)
             {
+				// TODO Check if move is valid!
+
+				// if valid
                 m_boardState.ChangeFieldState(id, GetStateForPlayerPawn(m_activePlayer));
+
+				StartNextRound();
             }
 
             // Next round
         }
+
+		private PlayerId GetOpposingPlayer(PlayerId player)
+		{
+			switch (player)
+			{
+				case PlayerId.White: return PlayerId.Black;
+				case PlayerId.Black: return PlayerId.White;
+			}
+
+			return PlayerId.None;
+		}
 
         private FieldState GetStateForPlayerPawn(PlayerId player)
         {
