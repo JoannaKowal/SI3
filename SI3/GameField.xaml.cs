@@ -16,7 +16,7 @@ namespace SI3
         SI3Backend.Game m_game;
         SI3Backend.BoardFieldId m_fieldId;
         State currentState;
-       public void Initialize(SI3Backend.Game board, SI3Backend.BoardFieldId fieldId)
+		public void Initialize(SI3Backend.Game board, SI3Backend.BoardFieldId fieldId)
         {
             m_game = board;
             m_fieldId = fieldId;
@@ -34,7 +34,10 @@ namespace SI3
         //}
         State GetCurrentState()
         {
-            return m_game.GetBoard().GetFieldState(m_fieldId);
+			if (m_game != null)
+				return m_game.GetBoard().GetFieldState(m_fieldId);
+			else
+				return State.Empty;	// Game not started
         }
 
         void RefreshImage()
@@ -55,9 +58,12 @@ namespace SI3
 
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            GetCurrentState();
-            m_game.PlacePawn(m_fieldId);
-            RefreshImage();
+			if (m_game != null)
+			{
+				GetCurrentState();
+				m_game.PlacePawn(m_fieldId);
+				RefreshImage();
+			}
         }
     }
 }

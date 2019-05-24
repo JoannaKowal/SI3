@@ -23,7 +23,20 @@ namespace SI3Backend
         public GameState m_currentState = GameState.Initial;
         public PlayerId m_activePlayer = PlayerId.None;
         Board m_boardState = new Board();
-      //  GameField gameField = new GameField();
+		//  GameField gameField = new GameField();
+
+
+		public void Start()
+		{
+			m_currentState = GameState.InProgress;
+			m_activePlayer = PlayerId.Black;
+
+		}
+		public void Stop()
+		{
+			// Reset Board
+		}
+		
 
         public void StartNextRound()
         {
