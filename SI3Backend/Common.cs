@@ -29,10 +29,10 @@ namespace SI3Backend
                 return otherField.m_fieldId == (m_fieldId + 1) % 8 ||
                     otherField.m_fieldId ==  (m_fieldId - 1) % 8;
             }
-            else if (otherField.m_fieldId == m_fieldId)
+            else if (otherField.m_fieldId == m_fieldId && m_fieldId % 2 == 1)
             {
-                return otherField.m_ringId == m_fieldId + 1 ||
-                    otherField.m_ringId == m_fieldId - 1;
+                return otherField.m_ringId == m_ringId + 1 ||
+                    otherField.m_ringId == m_ringId - 1;
             }
             return false;
         }

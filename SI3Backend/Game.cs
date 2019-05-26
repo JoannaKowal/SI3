@@ -20,17 +20,22 @@ namespace SI3Backend
     }
     public class Game
     {
+        public delegate void OnBoardChanged();
+        public event OnBoardChanged OnBoardChangedEvent;
         public GameState m_currentState = GameState.Initial;
         public PlayerId m_activePlayer = PlayerId.None;
         Board m_boardState = new Board();
-		//  GameField gameField = new GameField();
+        public int numberOfWhitePawns { get; set; }
+        public int numberOfBlackPawns { get; set; }
 
-		// TODO parametry!
-		public void Start()
+
+        // TODO parametry!
+        public void Start()
 		{
 			m_currentState = GameState.InProgress;
 			m_activePlayer = PlayerId.Black;
-
+            numberOfBlackPawns = 9;
+            numberOfWhitePawns = 9;
 		}
 		public void Stop()
 		{
@@ -50,13 +55,15 @@ namespace SI3Backend
 
         public void PlacePawn(BoardFieldId id)
         {
+         
             if ( m_activePlayer != PlayerId.None)
             {
+
 				// TODO Check if move is valid!
 
 				// if valid
                 m_boardState.ChangeFieldState(id, GetStateForPlayerPawn(m_activePlayer));
-
+                OnBoardChangedEvent();
 				StartNextRound();
             }
 

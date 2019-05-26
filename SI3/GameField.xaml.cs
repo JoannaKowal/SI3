@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SI3Backend;
+using System;
 using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,7 @@ namespace SI3
         {
             m_game = board;
             m_fieldId = fieldId;
+            m_game.OnBoardChangedEvent += new Game.OnBoardChanged(RefreshImage);
         }
 
         State GetCurrentState()
@@ -45,11 +47,22 @@ namespace SI3
         private void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
 			Debug.Assert(m_game != null);
+            if (m_game.numberOfWhitePawns > 0)
+            {
+                if(m_game.m_activePlayer == PlayerId.White)
+                {
+                    m_game.numberOfWhitePawns--;
+                }
+                else
+                {
+                    m_game.numberOfBlackPawns--;
+                }
+                m_game.PlacePawn(m_fieldId);
 
-			m_game.PlacePawn(m_fieldId);
+            }
 
-			// TODO zrobić delegate i event w game (OnBoardChanged) i to RefreshImage podpiąć, zamiast wołać tutaj
-			RefreshImage();
+            // TODO zrobić delegate i event w game (OnBoardChanged) i to RefreshImage podpiąć, zamiast wołać tutaj
+			//RefreshImage();
         }
     }
 }

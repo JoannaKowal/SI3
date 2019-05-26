@@ -43,5 +43,35 @@ namespace SI3Backend
         {
             return new BoardFieldId(index / BoardFieldId.MaxRingId, index % BoardFieldId.MaxFieldId);
         }
+        public bool IsMill(BoardFieldId id)
+        {
+            FieldState state = this.GetFieldState(id);
+            BoardFieldId temp = id;
+            if(id.m_fieldId % 2 == 0) // narożniki
+            {
+                id.m_fieldId++;
+                if(this.GetFieldState(id) == state)
+                {
+                    id.m_fieldId = (id.m_fieldId + 1) % 8;
+                    if(this.GetFieldState(id) == state)
+                    {
+                        return true;
+                    }
+                }
+                id = temp;
+                id.m_fieldId = (id.m_fieldId - 1) % 8;
+                if (this.GetFieldState(id) == state)
+                {
+                    id.m_fieldId = (id.m_fieldId - 1) % 8;
+                    if (this.GetFieldState(id) == state)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+
+            }
+
+        }
     }
 }
