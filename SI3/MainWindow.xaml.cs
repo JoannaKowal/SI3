@@ -1,5 +1,7 @@
 ﻿
 using SI3Backend;
+using System;
+using System.ComponentModel;
 using System.Windows;
 using static SI3.Options;
 
@@ -8,14 +10,54 @@ namespace SI3
     /// <summary>
     /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public SI3Backend.Game m_gameState = new SI3Backend.Game();
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+
+        public string winnerContent
+        {
+            get
+            {
+                return winnerContent;
+            }
+            set
+            {
+                if (m_gameState.m_currentState == GameState.Finished)
+                {
+
+                    Console.Write("czarny");
+                    if (m_gameState.winner == PlayerId.Black)
+                    {
+                        winnerContent = "Wygrał Czarny";
+                        winnerLabel.Content = winnerContent;
+                        OnPropertyChanged(winnerContent);
+                    }
+                    else
+                    {
+                        winnerContent = "Wygrał Biały";
+                        winnerLabel.Content = winnerContent;
+                        OnPropertyChanged(winnerContent);
+                    }
+                }
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
-
+            this.DataContext = new Game();
 			SetupBoard();
+
 		}
 
 		private void SetupBoard()
@@ -54,6 +96,7 @@ namespace SI3
 
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
+          
             Options optionsWindow = new Options();
             optionsWindow.Show();
             optionsWindow.OnOKEvent += new Options.OnOK(OnStartGame);
@@ -70,5 +113,6 @@ namespace SI3
         {
             this.Close();
         }
+     
     }
 }
