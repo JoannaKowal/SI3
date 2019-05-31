@@ -27,6 +27,12 @@ namespace SI3Backend
         Board m_boardState = new Board();
         public int numberOfWhitePawns { get; set; }
         public int numberOfBlackPawns { get; set; }
+        public int whitePawnsOnBord;
+        public int blackPawnsOnBord;
+
+        public bool mill;
+        public PlayerId winner;
+        public BoardFieldId fieldToMove;
 
 
         // TODO parametry!
@@ -36,6 +42,9 @@ namespace SI3Backend
 			m_activePlayer = PlayerId.Black;
             numberOfBlackPawns = 9;
             numberOfWhitePawns = 9;
+            whitePawnsOnBord = 0;
+            blackPawnsOnBord = 0;
+            mill = false;
 		}
 		public void Stop()
 		{
@@ -58,13 +67,75 @@ namespace SI3Backend
          
             if ( m_activePlayer != PlayerId.None)
             {
+                if(this.numberOfWhitePawns > 0)
+                {
+                    // TODO Check if move is valid!
+                    if (mill)
+                    {
+                        if (m_boardState.GetFieldState(id) == GetStateForPlayerPawn(m_activePlayer))
+                        {
+                            if (!m_boardState.IsMill(id))
+                            {
+                                if(m_boardState.GetFieldState(id) == FieldState.Black)
+                                {
+                                    blackPawnsOnBord--;
+                                }
+                                else
+                                {
+                                    whitePawnsOnBord--;
+                                }
+                                this.GetBoard().SetFieldState(id, FieldState.Empty);
+                                mill = false;
+                                OnBoardChangedEvent();
+                            }
+                        }
+                    }
+                    else if (m_boardState.GetFieldState(id) == FieldState.Empty)
+                    {
+                        m_boardState.ChangeFieldState(id, GetStateForPlayerPawn(m_activePlayer));
+                        OnBoardChangedEvent();
+                        StartNextRound();
+                    }
 
-				// TODO Check if move is valid!
+                }
+                else
+                {
+                    if (mill)
+                    {
+                        if (m_boardState.GetFieldState(id) == GetStateForPlayerPawn(m_activePlayer))
+                        {
+                            if (!m_boardState.IsMill(id))
+                            {
+                                if (m_boardState.GetFieldState(id) == FieldState.Black)
+                                {
+                                    blackPawnsOnBord--;
+                                }
+                                else
+                                {
+                                    whitePawnsOnBord--;
+                                }
+                                this.GetBoard().SetFieldState(id, FieldState.Empty);
+                                mill = false;
+                                OnBoardChangedEvent();
+                            }
+                        }
+                    }
+                    else if (this.GetBoard().GetFieldState(id) != FieldState.Empty)
+                    {
+                        m_boardState.ChangeFieldState(id, FieldState.Empty);
+                        OnBoardChangedEvent();
+                    }
+                    else
+                    {
+                        m_boardState.ChangeFieldState(id, GetStateForPlayerPawn(m_activePlayer));
+                        OnBoardChangedEvent();
+                        StartNextRound();
+                    }
+                   
+                }
 
-				// if valid
-                m_boardState.ChangeFieldState(id, GetStateForPlayerPawn(m_activePlayer));
-                OnBoardChangedEvent();
-				StartNextRound();
+                // if valid
+
             }
 
             // Next round

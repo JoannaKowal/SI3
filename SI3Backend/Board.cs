@@ -28,6 +28,10 @@ namespace SI3Backend
         {
             return m_fields[ToIndex(id)];
         }
+        public void SetFieldState(BoardFieldId id, FieldState newState)
+        {
+            m_fields[ToIndex(id)] = newState;
+        }
 
         public void ChangeFieldState(BoardFieldId id, FieldState newState)
         {
@@ -45,6 +49,10 @@ namespace SI3Backend
         }
         public bool IsMill(BoardFieldId id)
         {
+            if(this.GetFieldState(id) == FieldState.Empty)
+            {
+                return false;
+            }
             FieldState state = this.GetFieldState(id);
             BoardFieldId temp = id;
             if(id.m_fieldId % 2 == 0) // narożniki
@@ -59,19 +67,39 @@ namespace SI3Backend
                     }
                 }
                 id = temp;
-                id.m_fieldId = (id.m_fieldId - 1) % 8;
+                id.m_fieldId = (id.m_fieldId + 7) % 8;
                 if (this.GetFieldState(id) == state)
                 {
-                    id.m_fieldId = (id.m_fieldId - 1) % 8;
+                    id.m_fieldId = (id.m_fieldId + 7) % 8;
                     if (this.GetFieldState(id) == state)
                     {
                         return true;
                     }
                 }
                 return false;
-
             }
-
+            else
+            {
+                id.m_fieldId--;
+                if (this.GetFieldState(id) == state)
+                {
+                    id.m_fieldId = (id.m_fieldId + 2) % 8;
+                    if (this.GetFieldState(id) == state)
+                    {
+                        return true;
+                    }
+                }
+                id = temp;
+                for(int ring = 0; ring < 3; ring ++)
+                {
+                    BoardFieldId fieldInRing = new BoardFieldId(ring, id.m_fieldId);
+                    if(this.GetFieldState(fieldInRing) != state)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
         }
     }
 }
