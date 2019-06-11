@@ -2,6 +2,7 @@
 using SI3Backend;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using ComboBox = System.Windows.Controls.ComboBox;
@@ -36,8 +37,11 @@ namespace SI3
         private string[] playerTypes = new string[] { "Człowiek", "AI" };
         private string[] algorithmTypes = new string[] { "Min-Max", "Alfa-beta", "Alfa-Beta H" };
         private int[] depthPossibilities = new int[] { 1, 2, 3, 4, 5, 6 };
-        private string[] heuristicType = new string[] { "Pionki", "Pionki+Młynki", "Pionki+Ruchy" };
+        private string[] heuristicTypes = new string[] { "Pionki", "Pionki+Młynki", "Pionki+Ruchy" };
 
+        System.Windows.Threading.DispatcherTimer dispatcherTimer;
+
+        Stopwatch startTimeStopwatch;
 
         private GameField[] gameFieldButtons = null;
 
@@ -54,6 +58,7 @@ namespace SI3
             InitializeComponent();
             InitDropdowns();
             InitPawnButtonHandlers();
+            startTimeStopwatch = new Stopwatch();
         }
 
         private void InitDropdowns()
@@ -73,9 +78,9 @@ namespace SI3
             second_player_depth_dropdown.ItemsSource = depthPossibilities;
             second_player_depth_dropdown.SelectedIndex = 0;
 
-            first_player_heuristic_dropdown.ItemsSource = depthPossibilities;
+            first_player_heuristic_dropdown.ItemsSource = heuristicTypes;
             first_player_heuristic_dropdown.SelectedIndex = 0;
-            second_player_heuristic_dropdown.ItemsSource = depthPossibilities;
+            second_player_heuristic_dropdown.ItemsSource = heuristicTypes;
             second_player_heuristic_dropdown.SelectedIndex = 0;
         }
 
@@ -225,6 +230,9 @@ namespace SI3
             gameEngine.OnPlayerTurnChanged -= aiPlayersController.OnPlayerTurnChanged;
             gameEngine = null;
             aiPlayersController = null;
+            dispatcherTimer.Stop();
+            dispatcherTimer = null;
+            startTimeStopwatch.Stop();
         }
 
         private void SaveLogs()
@@ -287,7 +295,7 @@ namespace SI3
             }
         }
 
-        private void Update()
+        private void UpdateAiSteps(object sender, EventArgs e)
         {
             MakeAiControllerStep();
             UpdateGameStateData();
@@ -298,7 +306,6 @@ namespace SI3
             if (aiPlayersController != null)
             {
                 long timeMilis = aiPlayersController.CheckStep();
-                timePassed += timeMilis / 1000f;
             }
         }
 
@@ -315,7 +322,7 @@ namespace SI3
         {
             if (!gameEngine.GameState.GameFinished)
             {
-                //timePassed += Time.deltaTime;
+                timePassed = startTimeStopwatch.ElapsedMilliseconds / 1000f;
                 time_label.Content = string.Format(timerTemplateText, Math.Truncate(timePassed * 100) / 100);
             }
         }
@@ -343,6 +350,11 @@ namespace SI3
             gameEngine.OnPlayerTurnChanged += aiPlayersController.OnPlayerTurnChanged;
             UpdateWinningPlayerText(PlayerNumber.None);
             shouldLogToFile = log_file_checkbox.IsChecked ?? false;
+            dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            dispatcherTimer.Tick += new EventHandler(UpdateAiSteps);
+            dispatcherTimer.Interval = new TimeSpan(1000);
+            dispatcherTimer.Start();
+            startTimeStopwatch.Start();
         }
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
