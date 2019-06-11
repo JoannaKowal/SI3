@@ -14,65 +14,77 @@
         <Image Source="{StaticResource MyImageSource}" RenderTransformOrigin="0.543,-0.032"
                HorizontalAlignment="Left" Width="500" Margin="100,0,0,100" VerticalAlignment="Center" 
                Height="500" />
-        <StackPanel HorizontalAlignment="Right" Width="250" RenderTransformOrigin="0.5,0.5">
-            <StackPanel.RenderTransform>
+        <local:GameField x:Name="field_0" HorizontalAlignment="Left" Height="45" Margin="100,555,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_1" HorizontalAlignment="Left" Height="45" Margin="328,555,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_2" HorizontalAlignment="Left" Height="45" Margin="555,555,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_3" HorizontalAlignment="Left" Height="45" Margin="176,479,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_4" HorizontalAlignment="Left" Height="45" Margin="328,479,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_5" HorizontalAlignment="Left" Height="45" Margin="479,479,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_6" HorizontalAlignment="Left" Height="45" Margin="252,403,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_7" HorizontalAlignment="Left" Height="45" Margin="328,403,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_8" HorizontalAlignment="Left" Height="45" Margin="403,403,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_9" HorizontalAlignment="Left" Height="45" Margin="100,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_10" HorizontalAlignment="Left" Height="45" Margin="176,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_11" HorizontalAlignment="Left" Height="45" Margin="252,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_12" HorizontalAlignment="Left" Height="45" Margin="403,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_13" HorizontalAlignment="Left" Height="45" Margin="479,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_14" HorizontalAlignment="Left" Height="45" Margin="555,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_15" HorizontalAlignment="Left" Height="45" Margin="252,252,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_16" HorizontalAlignment="Left" Height="45" Margin="328,252,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_17" HorizontalAlignment="Left" Height="45" Margin="403,252,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_18" HorizontalAlignment="Left" Height="45" Margin="176,176,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_19" HorizontalAlignment="Left" Height="45" Margin="328,176,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_20" HorizontalAlignment="Left" Height="45" Margin="479,176,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_21" HorizontalAlignment="Left" Height="45" Margin="100,100,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_22" HorizontalAlignment="Left" Height="45" Margin="328,100,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+        <local:GameField x:Name="field_23" HorizontalAlignment="Left" Height="45" Margin="555,100,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
+
+
+        <Label Name="turn_label" Content="Tura: " Width="150" Height="30" Margin="662,53,288,717"/>
+        <Label Name="winning_player_label" Content="Wygrał: " Width="150" Height="30" Margin="869,53,81,717"/>
+        <Label Name="turns_number_label" Content="Liczba tur: 0" Width="150" Height="30" Margin="662,100,288,670"/>
+        <Label Name="time_label" Content="Czas[ms]: 0,00" Width="150" Height="30" Margin="869,100,81,670"/>
+
+        <Label Content="Gracz 1" Width="150" Height="30" Margin="662,218,288,552"/>
+        <Label Content="Gracz 2" Width="150" Height="30" Margin="869,218,81,552"/>
+        <ComboBox Name="first_player_type_dropdown" HorizontalAlignment="Left" Margin="662,275,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="First_player_type_dropdown_SelectionChanged"/>
+        <ComboBox Name="second_player_type_dropdown" HorizontalAlignment="Left" Margin="878,275,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="Second_player_type_dropdown_SelectionChanged"/>
+
+        <Label Content="Algorytm 1" Width="150" Height="30" Margin="662,328,288,442"/>
+        <Label Content="Algorytm 2" Width="150" Height="30" Margin="869,328,81,442"/>
+        <ComboBox Name="first_player_algorithm_dropdown" HorizontalAlignment="Left" Margin="662,375,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="second_player_algorithm_dropdown" HorizontalAlignment="Left" Margin="878,375,0,0" VerticalAlignment="Top" Width="120"/>
+
+        <Label Content="Głębokość drzewa 1" Width="150" Height="30" Margin="662,418,288,352"/>
+        <Label Content="Głębokość drzewa 2" Width="150" Height="30" Margin="869,418,81,352"/>
+        <ComboBox Name="first_player_depth_dropdown" HorizontalAlignment="Left" Margin="662,453,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="second_player_depth_dropdown" HorizontalAlignment="Left" Margin="878,453,0,0" VerticalAlignment="Top" Width="120"/>
+        
+        <Label Content="Heurystyka 1" Width="150" Height="30" Margin="662,494,288,276"/>
+        <Label Content="Heurystyka 2" Width="150" Height="30" Margin="878,494,72,276"/>
+        <ComboBox Name="first_player_heuristic_dropdown" HorizontalAlignment="Left" Margin="662,535,0,0" VerticalAlignment="Top" Width="120"/>
+        <ComboBox Name="second_player_heuristic_dropdown" HorizontalAlignment="Left" Margin="878,535,0,0" VerticalAlignment="Top" Width="120"/>
+        
+        <CheckBox Name="log_file_checkbox" Content="Zapisz do pliku?" HorizontalAlignment="Left" Margin="662,628,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnNewGame" Click="btnNewGame_Click" Content="Zacznij grę" Height="30" 
+                    FontSize="14" FontFamily="Segoe UI Black" Margin="725,705,278,65">
+            <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
                     <SkewTransform/>
                     <RotateTransform/>
-                    <TranslateTransform X="-50"/>
                 </TransformGroup>
-            </StackPanel.RenderTransform>
-            <Button x:Name="btnNewGame" Click="btnNewGame_Click" Content="Nowa gra" 
-                    HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="200" Height="30" 
-                    FontSize="14" FontFamily="Segoe UI Black" RenderTransformOrigin="0.5,0.5">
-                <Button.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform Y="110"/>
-                    </TransformGroup>
-                </Button.RenderTransform>
-            </Button>
-            <Button x:Name="btnExit" Click="btnExit_Click" Content="Zamknij" HorizontalAlignment="Center" 
-                    VerticalAlignment="Bottom" Width="200" Height="30" FontSize="14"
-                    FontFamily="Segoe UI Black" RenderTransformOrigin="0.5,0.5" Margin="25,0">
-                <Button.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform/>
-                        <RotateTransform/>
-                        <TranslateTransform Y="530"/>
-                    </TransformGroup>
-                </Button.RenderTransform>
-            </Button>
-        </StackPanel>
-        <local:GameField x:Name="slot_0_0" HorizontalAlignment="Left" Height="45" Margin="100,100,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_1" HorizontalAlignment="Left" Height="45" Margin="328,100,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_2" HorizontalAlignment="Left" Height="45" Margin="555,100,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_3" HorizontalAlignment="Left" Height="45" Margin="555,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_4" HorizontalAlignment="Left" Height="45" Margin="555,555,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_5" HorizontalAlignment="Left" Height="45" Margin="328,555,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_6" HorizontalAlignment="Left" Height="45" Margin="100,555,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_0_7" HorizontalAlignment="Left" Height="45" Margin="100,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_0" HorizontalAlignment="Left" Height="45" Margin="176,176,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_1" HorizontalAlignment="Left" Height="45" Margin="328,176,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_2" HorizontalAlignment="Left" Height="45" Margin="479,176,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_3" HorizontalAlignment="Left" Height="45" Margin="479,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_4" HorizontalAlignment="Left" Height="45" Margin="479,479,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_5" HorizontalAlignment="Left" Height="45" Margin="328,479,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_6" HorizontalAlignment="Left" Height="45" Margin="176,479,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_1_7" HorizontalAlignment="Left" Height="45" Margin="176,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_0" HorizontalAlignment="Left" Height="45" Margin="252,252,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_1" HorizontalAlignment="Left" Height="45" Margin="328,252,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_2" HorizontalAlignment="Left" Height="45" Margin="403,252,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_3" HorizontalAlignment="Left" Height="45" Margin="403,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_4" HorizontalAlignment="Left" Height="45" Margin="403,403,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_5" HorizontalAlignment="Left" Height="45" Margin="328,403,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_6" HorizontalAlignment="Left" Height="45" Margin="252,403,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <local:GameField x:Name="slot_2_7" HorizontalAlignment="Left" Height="45" Margin="252,328,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="0.5,0.5"/>
-        <Label x:Name="winnerLabel" Content="{Binding winnerContent, Mode=OneWay}" HorizontalAlignment="Left" Margin="328,37,0,0" VerticalAlignment="Top" FontSize="16" Visibility="Visible"/>
-
+            </Button.RenderTransform>
+        </Button>
+        <Button x:Name="btnExit" Click="btnExit_Click" Content="Zamknij" Height="30" FontSize="14"
+                    FontFamily="Segoe UI Black" Margin="939,705,69,65">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
     </Grid>
 </Window>

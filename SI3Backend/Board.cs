@@ -1,105 +1,58 @@
-﻿
-
+﻿using System.Collections.Generic;
 namespace SI3Backend
 {
-    public enum FieldState
-    {
-        Empty,
-        White,
-        Black
-    }
     public class Board
     {
-        FieldState[] m_fields = new FieldState[24];
+        public static int DEFAULT_NUMBER_OF_FIELDS = 24;
 
+        public List<Field> Fields
+        {
+            get
+            {
+                return fields;
+            }
+        }
+
+        private List<Field> fields;
         public Board()
         {
-            Clear();
-        }
-
-        public void Clear()
-        {
-            for (var i = 0; i < m_fields.Length; ++i)
+            this.fields = new List<Field>(DEFAULT_NUMBER_OF_FIELDS);
+            for (int i = 0; i < DEFAULT_NUMBER_OF_FIELDS; i++)
             {
-                m_fields[i] = FieldState.Empty;
+                this.fields.Add(new Field(i));
             }
         }
-        public FieldState GetFieldState(BoardFieldId id)
+
+        public Board(Board other)
         {
-            return m_fields[ToIndex(id)];
-        }
-        public void SetFieldState(BoardFieldId id, FieldState newState)
-        {
-            m_fields[ToIndex(id)] = newState;
+            this.fields = new List<Field>(other.fields.Count);
+            for (int i = 0; i < other.fields.Count; i++)
+            {
+                this.fields.Add(new Field(other.fields[i]));
+            }
         }
 
-        public void ChangeFieldState(BoardFieldId id, FieldState newState)
+        public Field GetField(int index)
         {
-            m_fields[ToIndex(id)] = newState;
+            return fields[index];
         }
 
-        private int ToIndex(BoardFieldId id)
+        public List<Field> GetPlayerFields(PlayerNumber playerNumber)
         {
-            return id.m_ringId * BoardFieldId.MaxFieldId + id.m_fieldId;
+            List<Field> playerFields = new List<Field>();
+            foreach (var field in fields)
+            {
+                if (field.PawnPlayerNumber == playerNumber)
+                {
+                    playerFields.Add(field);
+                }
+            }
+            return playerFields;
         }
 
-        private BoardFieldId FromIndex(int index)
+        public List<Field> GetEmptyFields()
         {
-            return new BoardFieldId(index / BoardFieldId.MaxRingId, index % BoardFieldId.MaxFieldId);
-        }
-        public bool IsMill(BoardFieldId id)
-        {
-            if(this.GetFieldState(id) == FieldState.Empty)
-            {
-                return false;
-            }
-            FieldState state = this.GetFieldState(id);
-            BoardFieldId temp = id;
-            if(id.m_fieldId % 2 == 0) // narożniki
-            {
-                id.m_fieldId++;
-                if(this.GetFieldState(id) == state)
-                {
-                    id.m_fieldId = (id.m_fieldId + 1) % 8;
-                    if(this.GetFieldState(id) == state)
-                    {
-                        return true;
-                    }
-                }
-                id = temp;
-                id.m_fieldId = (id.m_fieldId + 7) % 8;
-                if (this.GetFieldState(id) == state)
-                {
-                    id.m_fieldId = (id.m_fieldId + 7) % 8;
-                    if (this.GetFieldState(id) == state)
-                    {
-                        return true;
-                    }
-                }
-                return false;
-            }
-            else
-            {
-                id.m_fieldId--;
-                if (this.GetFieldState(id) == state)
-                {
-                    id.m_fieldId = (id.m_fieldId + 2) % 8;
-                    if (this.GetFieldState(id) == state)
-                    {
-                        return true;
-                    }
-                }
-                id = temp;
-                for(int ring = 0; ring < 3; ring ++)
-                {
-                    BoardFieldId fieldInRing = new BoardFieldId(ring, id.m_fieldId);
-                    if(this.GetFieldState(fieldInRing) != state)
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
+            return GetPlayerFields(PlayerNumber.None);
         }
     }
 }

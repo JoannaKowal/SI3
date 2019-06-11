@@ -1,118 +1,362 @@
 ﻿
 using SI3Backend;
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.IO;
 using System.Windows;
-using static SI3.Options;
+using ComboBox = System.Windows.Controls.ComboBox;
 
 namespace SI3
 {
     /// <summary>
     /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : Window
     {
-        public SI3Backend.Game m_gameState = new SI3Backend.Game();
+        private static readonly int HUMAN_DROPDOWN_NUMBER = 0;
+        private static readonly int AI_DROPDOWN_NUMBER = 1;
+        private static readonly int MIN_MAX_DROPDOWN_NUMBER = 0;
+        private static readonly int ALPHA_BETA_DROPDOWN_NUMBER = 1;
+        private static readonly int FAST_ALPHA_BETA_DROPDOWN_NUMBER = 2;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string name)
+        private static Dictionary<int, Func<Heuristic>> heuristicDictionary;
+
+        private GameEngine gameEngine = null;
+        private PlayersController aiPlayersController = null;
+
+        private float timePassed;
+        private bool shouldLogToFile;
+        private string firstPlayerType;
+        private string secondPlayerType;
+        private string numberOfMovesTemplateText = "Turns: {0}";
+        private string timerTemplateText = "Time[s]: {0}";
+        private string currentMovingPlayerTemplateText = "Turn: Player {0}";
+        private string winningPlayerTextTemplate = "Won: ";
+
+        private string[] playerTypes = new string[] { "Człowiek", "AI" };
+        private string[] algorithmTypes = new string[] { "Min-Max", "Alfa-beta", "Alfa-Beta H" };
+        private int[] depthPossibilities = new int[] { 1, 2, 3, 4, 5, 6 };
+        private string[] heuristicType = new string[] { "Pionki", "Pionki+Młynki", "Pionki+Ruchy" };
+
+
+        private GameField[] gameFieldButtons = null;
+
+        static MainWindow()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
+            heuristicDictionary = new Dictionary<int, Func<Heuristic>>();
+            heuristicDictionary[0] = () => new SimplePawnNumberHeuristic();
+            heuristicDictionary[1] = () => new PawnMillNumberHeuristic();
+            heuristicDictionary[2] = () => new PawnMoveNumberHeuristic();
         }
 
-
-        public string winnerContent
-        {
-            get
-            {
-                return winnerContent;
-            }
-            set
-            {
-                if (m_gameState.m_currentState == GameState.Finished)
-                {
-
-                    Console.Write("czarny");
-                    if (m_gameState.winner == PlayerId.Black)
-                    {
-                        winnerContent = "Wygrał Czarny";
-                        winnerLabel.Content = winnerContent;
-                        OnPropertyChanged(winnerContent);
-                    }
-                    else
-                    {
-                        winnerContent = "Wygrał Biały";
-                        winnerLabel.Content = winnerContent;
-                        OnPropertyChanged(winnerContent);
-                    }
-                }
-            }
-        }
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new Game();
-			SetupBoard();
+            InitDropdowns();
+            InitPawnButtonHandlers();
+        }
 
-		}
+        private void InitDropdowns()
+        {
+            first_player_type_dropdown.ItemsSource = playerTypes;
+            first_player_type_dropdown.SelectedIndex = 0;
+            second_player_type_dropdown.ItemsSource = playerTypes;
+            second_player_type_dropdown.SelectedIndex = 0;
 
-		private void SetupBoard()
-		{
-			// Ring 0
-			slot_0_0.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 0));
-			slot_0_1.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 1));
-			slot_0_2.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 2));
-			slot_0_3.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 3));
-			slot_0_4.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 4));
-			slot_0_5.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 5));
-			slot_0_6.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 6));
-			slot_0_7.Initialize(m_gameState, new SI3Backend.BoardFieldId(0, 7));
+            first_player_algorithm_dropdown.ItemsSource = algorithmTypes;
+            first_player_algorithm_dropdown.SelectedIndex = 0;
+            second_player_algorithm_dropdown.ItemsSource = algorithmTypes;
+            second_player_algorithm_dropdown.SelectedIndex = 0;
 
-			// Ring 1
-			slot_1_0.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 0));
-			slot_1_1.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 1));
-			slot_1_2.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 2));
-			slot_1_3.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 3));
-			slot_1_4.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 4));
-			slot_1_5.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 5));
-			slot_1_6.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 6));
-			slot_1_7.Initialize(m_gameState, new SI3Backend.BoardFieldId(1, 7));
+            first_player_depth_dropdown.ItemsSource = depthPossibilities;
+            first_player_depth_dropdown.SelectedIndex = 0;
+            second_player_depth_dropdown.ItemsSource = depthPossibilities;
+            second_player_depth_dropdown.SelectedIndex = 0;
 
-			// Ring 2
-			slot_2_0.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 0));
-			slot_2_1.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 1));
-			slot_2_2.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 2));
-			slot_2_3.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 3));
-			slot_2_4.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 4));
-			slot_2_5.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 5));
-			slot_2_6.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 6));
-			slot_2_7.Initialize(m_gameState, new SI3Backend.BoardFieldId(2, 7));
+            first_player_heuristic_dropdown.ItemsSource = depthPossibilities;
+            first_player_heuristic_dropdown.SelectedIndex = 0;
+            second_player_heuristic_dropdown.ItemsSource = depthPossibilities;
+            second_player_heuristic_dropdown.SelectedIndex = 0;
+        }
 
-		}
+        private void InitPawnButtonHandlers()
+        {
+            this.gameFieldButtons = new GameField[]
+            {
+                field_0, field_1, field_2, field_3, field_4, field_5,
+                field_6, field_7, field_8, field_9, field_10, field_11,
+                field_12, field_13, field_14, field_15, field_16, field_17,
+                field_18, field_19, field_20, field_21, field_22, field_23
+            };
+
+            for (int i = 0; i < gameFieldButtons.Length; i++)
+            {
+                gameFieldButtons[i].Initialize(this, i);
+            }
+        }
+
+        private void SetAIDropdownsActive(int playerType, PlayerNumber playerNumber)
+        {
+            if(playerNumber == PlayerNumber.FirstPlayer)
+            {
+                if (playerType == HUMAN_DROPDOWN_NUMBER)
+                {
+                    first_player_algorithm_dropdown.IsEnabled = false;
+                    first_player_heuristic_dropdown.IsEnabled = false;
+                    first_player_depth_dropdown.IsEnabled = false;
+                }
+                else
+                {
+                    first_player_algorithm_dropdown.IsEnabled = true;
+                    first_player_heuristic_dropdown.IsEnabled = true;
+                    first_player_depth_dropdown.IsEnabled = true;
+                }
+            }
+            else
+            {
+                if (playerType == HUMAN_DROPDOWN_NUMBER)
+                {
+                    second_player_algorithm_dropdown.IsEnabled = false;
+                    second_player_heuristic_dropdown.IsEnabled = false;
+                    second_player_depth_dropdown.IsEnabled = false;
+                }
+                else
+                {
+                    second_player_algorithm_dropdown.IsEnabled = true;
+                    second_player_heuristic_dropdown.IsEnabled = true;
+                    second_player_depth_dropdown.IsEnabled = true;
+                }
+            }
+        }
+
+        private AiPlayer InitPlayer(PlayerNumber playerNumber)
+        {
+            ComboBox playerDropdown;
+            ComboBox algorithmDropdown;
+            ComboBox heuristicDropdown;
+            ComboBox searchDepthDropdown;
+            if (playerNumber == PlayerNumber.FirstPlayer)
+            {
+                playerDropdown = first_player_type_dropdown;
+                algorithmDropdown = first_player_algorithm_dropdown;
+                heuristicDropdown = first_player_heuristic_dropdown;
+                searchDepthDropdown = first_player_depth_dropdown;
+            }
+            else
+            {
+                playerDropdown = second_player_type_dropdown;
+                algorithmDropdown = second_player_algorithm_dropdown;
+                heuristicDropdown = second_player_heuristic_dropdown;
+                searchDepthDropdown = second_player_depth_dropdown;
+            }
+            if (playerDropdown.SelectedIndex == AI_DROPDOWN_NUMBER)
+            {
+                Heuristic heuristic = heuristicDictionary[heuristicDropdown.SelectedIndex]();
+                int searchDepth = searchDepthDropdown.SelectedIndex + 1;
+                if (algorithmDropdown.SelectedIndex == MIN_MAX_DROPDOWN_NUMBER)
+                {
+                    SavePlayerType(playerNumber, "Min-Max: " + heuristic.GetType().Name);
+                    return new MinMaxAiPlayer(gameEngine, heuristic, playerNumber, searchDepth);
+                }
+                else if (algorithmDropdown.SelectedIndex == ALPHA_BETA_DROPDOWN_NUMBER)
+                {
+                    SavePlayerType(playerNumber, "Alfa-Beta: " + heuristic.GetType().Name);
+                    return new AlphaBetaAiPlayer(gameEngine, heuristic, playerNumber, searchDepth);
+                }
+                else
+                {
+                    SavePlayerType(playerNumber, "Alfa-Beta H: " + heuristic.GetType().Name);
+                    Heuristic sortHeuristic = new SimplePawnNumberHeuristic();
+                    return new FastAlphaBetaAiPlayer(gameEngine, heuristic, playerNumber, searchDepth, sortHeuristic);
+                }
+            }
+            else
+            {
+                SavePlayerType(playerNumber, "Człowiek");
+            }
+            return null;
+        }
+
+        private void SavePlayerType(PlayerNumber playerNumber, string type)
+        {
+            if (playerNumber == PlayerNumber.FirstPlayer)
+            {
+                firstPlayerType = type;
+            }
+            else
+            {
+                secondPlayerType = type;
+            }
+        }
+
+        private void OnBoardUpdated(Board newBoard)
+        {
+            for (int i = 0; i < gameFieldButtons.Length; i++)
+            {
+                Field field = newBoard.GetField(i);
+                gameFieldButtons[i].RefreshImage(field.PawnPlayerNumber);
+            }
+        }
+
+        private void OnPlayerTurnChanged(PlayerNumber currentMovingPlayerNumber)
+        {
+            if (currentMovingPlayerNumber == PlayerNumber.FirstPlayer)
+            {
+                UpdateTurnText(1);
+            }
+            else
+            {
+                UpdateTurnText(2);
+            }
+        }
+
+        private void UpdateTurnText(int playerNumber)
+        {
+            turn_label.Content = string.Format(currentMovingPlayerTemplateText, playerNumber);
+        }
+
+        private void OnGameFinished(PlayerNumber winningPlayer)
+        {
+            UpdateWinningPlayerText(winningPlayer);
+            SaveLogs();
+            gameEngine.OnBoardChanged -= OnBoardUpdated;
+            gameEngine.OnGameFinished -= OnGameFinished;
+            gameEngine.OnPlayerTurnChanged -= OnPlayerTurnChanged;
+            gameEngine.OnPlayerTurnChanged -= aiPlayersController.OnPlayerTurnChanged;
+            gameEngine = null;
+            aiPlayersController = null;
+        }
+
+        private void SaveLogs()
+        {
+            if (shouldLogToFile)
+            {
+                string moves = gameEngine.GameState.MovesUntilNow;
+                string gameLog = firstPlayerType + " vs. " + secondPlayerType + "\n";
+                gameLog += "Won: " + (gameEngine.GameState.WinningPlayer == PlayerNumber.FirstPlayer ? "White" : "Black") + "\n";
+                float firstPlayerTime = aiPlayersController.firstPlayerDecisionTimeMillis / 1000f;
+                float secondPlayerTime = aiPlayersController.secondPlayerDecisionTimeMillis / 1000f;
+                if (firstPlayerTime == 0)
+                {
+                    firstPlayerTime = timePassed - (secondPlayerTime / (1000f));
+                }
+                gameLog += "White moves: " + gameEngine.GameState.FirstPlayerMovesMade + "\n";
+                gameLog += "Black moves: " + gameEngine.GameState.SecondPlayerMovesMade + "\n";
+                gameLog += "White time: " + firstPlayerTime + "\n";
+                gameLog += "Black time: " + secondPlayerTime + "\n";
+                if (aiPlayersController.firstAiPlayer != null)
+                {
+                    gameLog += "White visited nodes: " + aiPlayersController.firstAiPlayer.visitedNodes + "\n";
+                }
+                if (aiPlayersController.secondAiPlayer != null)
+                {
+                    gameLog += "Black visited nodes: " + aiPlayersController.secondAiPlayer.visitedNodes + "\n";
+                }
+                gameLog += "Moves: \n";
+                gameLog += moves;
+                try
+                {
+                    File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".txt", gameLog);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+        }
+
+        private void UpdateWinningPlayerText(PlayerNumber winningPlayer)
+        {
+            string winningPlayerString = "Player 1";
+            if (winningPlayer == PlayerNumber.SecondPlayer)
+            {
+                winningPlayerString = "Player 2";
+            }
+            else if (winningPlayer == PlayerNumber.None)
+            {
+                winningPlayerString = "";
+            }
+            winning_player_label.Content = winningPlayerTextTemplate + winningPlayerString;
+        }
+
+        public void HandleButtonClick(int fieldIndex)
+        {
+            if (gameEngine != null)
+            {
+                gameEngine.HandleSelection(fieldIndex);
+            }
+        }
+
+        private void Update()
+        {
+            MakeAiControllerStep();
+            UpdateGameStateData();
+        }
+
+        private void MakeAiControllerStep()
+        {
+            if (aiPlayersController != null)
+            {
+                long timeMilis = aiPlayersController.CheckStep();
+                timePassed += timeMilis / 1000f;
+            }
+        }
+
+        private void UpdateGameStateData()
+        {
+            if (gameEngine != null)
+            {
+                UpdateMoveNumberText();
+                UpdateTime();
+            }
+        }
+
+        private void UpdateTime()
+        {
+            if (!gameEngine.GameState.GameFinished)
+            {
+                //timePassed += Time.deltaTime;
+                time_label.Content = string.Format(timerTemplateText, Math.Truncate(timePassed * 100) / 100);
+            }
+        }
+
+        private void UpdateMoveNumberText()
+        {
+            turns_number_label.Content = string.Format(numberOfMovesTemplateText, gameEngine.GameState.MovesMade);
+        }
 
         private void btnNewGame_Click(object sender, RoutedEventArgs e)
         {
-          
-            Options optionsWindow = new Options();
-            optionsWindow.Show();
-            optionsWindow.OnOKEvent += new Options.OnOK(OnStartGame);
+            StartGame();
         }
-        // Zrobic struct z parametrami i tu przekazac
-        private void OnStartGame(GameParameters gameParameters)
+        private void StartGame()
         {
-			// TODO przekazać parametry
-			// TODO Na górze duży napis Stan Gry!
-			// TODO W trakcie gry napis na przycisku NowaGRa powinien się zmienić na Przerwij grę, albo powinien być wyszarzony
-			m_gameState.Start();
+            gameEngine = new GameEngine();
+            AiPlayer firstPlayer = InitPlayer(PlayerNumber.FirstPlayer);
+            AiPlayer secondPlayer = InitPlayer(PlayerNumber.SecondPlayer);
+            aiPlayersController = new PlayersController(firstPlayer, secondPlayer);
+            timePassed = 0;
+            OnBoardUpdated(gameEngine.GameState.CurrentBoard);
+            gameEngine.OnBoardChanged += OnBoardUpdated;
+            gameEngine.OnGameFinished += OnGameFinished;
+            gameEngine.OnPlayerTurnChanged += OnPlayerTurnChanged;
+            gameEngine.OnPlayerTurnChanged += aiPlayersController.OnPlayerTurnChanged;
+            UpdateWinningPlayerText(PlayerNumber.None);
+            shouldLogToFile = log_file_checkbox.IsChecked ?? false;
         }
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
-     
+
+        private void First_player_type_dropdown_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            SetAIDropdownsActive(first_player_type_dropdown.SelectedIndex, PlayerNumber.FirstPlayer);
+        }
+
+        private void Second_player_type_dropdown_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            SetAIDropdownsActive(second_player_type_dropdown.SelectedIndex, PlayerNumber.SecondPlayer);
+        }
     }
 }

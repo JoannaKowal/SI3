@@ -9,8 +9,21 @@
     <Import_RootNamespace>SI3Backend</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AiPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AlphaBetaAiPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Board.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Common.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Game.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FastAlphaBetaAiPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Field.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameEngine.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GameState.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Heuristic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Mill.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MillDifference.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MinMaxAiPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Move.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PawnMillNumberHeuristic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PawnMoveNumberHeuristic.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PlayersController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SimplePawnNumberHeuristic.cs" />
   </ItemGroup>
 </Project>
