@@ -16,7 +16,7 @@ namespace SI3Backend
             this.game = game;
             this.heuristic = heuristic;
             this.playerNumber = playerNumber;
-            this.searchDepth = searchDepth * 2;
+            this.searchDepth = searchDepth;
         }
 
         public override void MakeMove()

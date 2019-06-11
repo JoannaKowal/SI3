@@ -17,7 +17,7 @@ namespace SI3Backend
             this.game = game;
             this.evaluationHeuristic = evaluationHeuristic;
             this.playerNumber = playerNumber;
-            this.searchDepth = searchDepth * 2;
+            this.searchDepth = searchDepth;
             if (sortHeuristic == null)
             {
                 this.sortHeuristic = evaluationHeuristic;
