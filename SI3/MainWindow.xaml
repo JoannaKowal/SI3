@@ -59,15 +59,15 @@
         <Label Content="Głębokość drzewa 2" Width="150" Height="30" Margin="869,418,81,352"/>
         <ComboBox Name="first_player_depth_dropdown" HorizontalAlignment="Left" Margin="662,453,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox Name="second_player_depth_dropdown" HorizontalAlignment="Left" Margin="878,453,0,0" VerticalAlignment="Top" Width="120"/>
-        
+
         <Label Content="Heurystyka 1" Width="150" Height="30" Margin="662,494,288,276"/>
         <Label Content="Heurystyka 2" Width="150" Height="30" Margin="878,494,72,276"/>
         <ComboBox Name="first_player_heuristic_dropdown" HorizontalAlignment="Left" Margin="662,535,0,0" VerticalAlignment="Top" Width="120"/>
         <ComboBox Name="second_player_heuristic_dropdown" HorizontalAlignment="Left" Margin="878,535,0,0" VerticalAlignment="Top" Width="120"/>
-        
+
         <CheckBox Name="log_file_checkbox" Content="Zapisz do pliku?" HorizontalAlignment="Left" Margin="662,628,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="btnNewGame" Click="btnNewGame_Click" Content="Zacznij grę" Height="30" 
-                    FontSize="14" FontFamily="Segoe UI Black" Margin="725,705,278,65">
+        <Button x:Name="btnNewGame" Click="btnNewGame_Click" Content="Zacznij grę" 
+                    FontSize="14" FontFamily="Segoe UI Black" Margin="692,579,311,191">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -76,8 +76,8 @@
                 </TransformGroup>
             </Button.RenderTransform>
         </Button>
-        <Button x:Name="btnExit" Click="btnExit_Click" Content="Zamknij" Height="30" FontSize="14"
-                    FontFamily="Segoe UI Black" Margin="939,705,69,65">
+        <Button x:Name="btnExit" Click="btnExit_Click" Content="Zamknij" FontSize="14"
+                    FontFamily="Segoe UI Black" Margin="906,579,102,191">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

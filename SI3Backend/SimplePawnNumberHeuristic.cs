@@ -2,8 +2,8 @@
 {
     public class SimplePawnNumberHeuristic : Heuristic
     {
-        private static readonly int DEFAULT_WINNING_WEIGHT = 1086;
-        private static readonly int DEFAULT_PAWN_WEIGHT = 9;
+        private static readonly int DEFAULT_WINNING_WEIGHT = 1000;
+        private static readonly int DEFAULT_PAWN_WEIGHT = 10;
 
         public virtual double Evaluate(GameState gameState)
         {
